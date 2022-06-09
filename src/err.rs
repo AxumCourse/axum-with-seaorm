@@ -40,6 +40,12 @@ impl From<askama::Error> for AppError {
         Self::from_err(Box::new(err), AppErrorType::Template)
     }
 }
+impl From<sea_orm::DbErr> for AppError {
+    fn from(err: sea_orm::DbErr) -> Self {
+        Self::from_err(Box::new(err), AppErrorType::Database)
+    }
+
+}
 
 impl axum::response::IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {

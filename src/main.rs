@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::Extension;
-use axum_with_seaorm::{config, router, state, };
+use axum_with_seaorm::{config, router, state};
 use dotenv::dotenv;
 use sea_orm::Database;
 

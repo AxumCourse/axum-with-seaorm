@@ -1,3 +1,26 @@
 {% extends "base.html" %} {% block title %}分类列表{%endblock%} {% block bc %}
 <li class="breadcrumb-item"><a href="/category">分类管理</a></li>
-{% endblock %} {% block content %} 分类列表内容 {%endblock%}
+{% endblock %} {% block content %} 
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categies %}
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>
+                <a href="/category/edit/{{ category.id }}" class="btn btn-primary btn-sm">修改</a>
+                <a href="/category/del/{{ category.id }}" class="btn btn-danger btn-sm" onclick="return confirm('确定删除“{{ category.name }}”？')">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{%endblock%}

@@ -1,7 +1,8 @@
 use askama::Template;
 use axum::response::Html;
+use sea_orm::DatabaseConnection;
 
-use crate::{AppError, Result};
+use crate::{state::AppState, AppError, Result};
 
 mod index;
 
@@ -27,4 +28,8 @@ fn log_error(handler_name: &str) -> Box<dyn Fn(AppError) -> AppError> {
         tracing::error!("{}: {:?}", handler_name, err);
         err
     })
+}
+
+fn get_conn<'a>(state: &'a AppState) -> &'a DatabaseConnection {
+    &state.conn
 }
