@@ -3,6 +3,7 @@ mod err;
 pub mod handler;
 pub mod router;
 pub mod view;
+pub mod entity;
 
 pub use err::{AppError, AppErrorType};
 
