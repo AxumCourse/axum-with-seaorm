@@ -13,3 +13,7 @@ CREATE TABLE articles ( -- 文章
 	is_del BOOLEAN NOT NULL DEFAULT FALSE -- 是否删除
 );
 
+-- 插入示例数据
+INSERT INTO categoies (id,name) VALUES
+(1,'Rust'), (2,'Go'), (3,'Javascript');
+
