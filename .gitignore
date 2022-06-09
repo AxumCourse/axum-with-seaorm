@@ -1,0 +1,9 @@
+/target
+.DS_Store
+.vscode
+.idea
+.atom
+.log
+*.log
+.env
+/dist

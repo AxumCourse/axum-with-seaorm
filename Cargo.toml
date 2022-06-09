@@ -1,0 +1,23 @@
+[package]
+name = "axum-with-seaorm"
+version = "0.1.0"
+edition = "2021"
+authors = ["axum.rs <team@axum.rs>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/AxumCourse/axum-with-seaorm"
+homepage = "https://axum.rs"
+description = "axum.rs专题：axum使用SeaORM"
+
+
+
+[dependencies]
+axum="0.5"
+tokio={ version="1", features=["full"] }
+serde = { version="1", features = ["derive"] }
+sea-orm={version="0.8", features=["sqlx-postgres", "runtime-tokio-native-tls", "macros", "debug-print"]}
+askama="0.11"
+config="0.13"
+dotenv="0.15"
+tracing = "0.1"
+tracing-subscriber = "0.3"
