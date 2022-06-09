@@ -1,9 +1,10 @@
 pub mod config;
+pub mod entity;
 mod err;
 pub mod handler;
 pub mod router;
+pub mod state;
 pub mod view;
-pub mod entity;
 
 pub use err::{AppError, AppErrorType};
 
