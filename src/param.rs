@@ -6,6 +6,7 @@ pub struct CategoryParams {
     pub is_del: Option<i32>,
     pub sort: Option<String>,
     pub page_size: Option<i32>,
+    pub page: Option<i32>,
 }
 
 impl CategoryParams {
@@ -21,6 +22,9 @@ impl CategoryParams {
     pub fn page_size(&self) -> i32 {
         self.page_size.unwrap_or(15)
     }
+    pub fn page(&self) -> i32 {
+        self.page.unwrap_or(0)
+    }
 }
 
 impl Default for CategoryParams {
@@ -30,6 +34,7 @@ impl Default for CategoryParams {
             is_del: None,
             sort: None,
             page_size: None,
+            page: None,
         }
     }
 }
