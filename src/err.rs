@@ -2,13 +2,14 @@
 pub enum AppErrorType {
     Database,
     Template,
+    Notfound,
 }
 
 type Cause = Box<dyn std::error::Error>;
 
 #[derive(Debug)]
 pub enum AppErrorItem {
-    Message(Option<String>),
+    Message(String),
     Cause(Cause),
 }
 
@@ -24,6 +25,12 @@ impl AppError {
     }
     pub fn from_err(cause: Cause, types: AppErrorType) -> Self {
         Self::new(types, AppErrorItem::Cause(cause))
+    }
+    pub fn from_msg(msg: &str, types: AppErrorType) -> Self {
+        Self::new(types, AppErrorItem::Message(msg.to_string()))
+    }
+    pub fn notfound() -> Self {
+        Self::from_msg("不存在的记录", AppErrorType::Notfound)
     }
 }
 
@@ -44,14 +51,13 @@ impl From<sea_orm::DbErr> for AppError {
     fn from(err: sea_orm::DbErr) -> Self {
         Self::from_err(Box::new(err), AppErrorType::Database)
     }
-
 }
 
 impl axum::response::IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
         let msg = match self.error {
             AppErrorItem::Cause(err) => err.to_string(),
-            AppErrorItem::Message(msg) => msg.unwrap_or("发生错误".to_string()),
+            AppErrorItem::Message(msg) => msg.to_string(),
         };
         msg.into_response()
     }

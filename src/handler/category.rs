@@ -1,9 +1,12 @@
 use std::sync::Arc;
 
-use axum::{extract::Query, Extension};
+use axum::{
+    extract::{Path, Query},
+    Extension,
+};
 use sea_orm::{ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder};
 
-use super::{get_conn, render, HtmlRespon};
+use super::{get_conn, log_error, render, HtmlRespon};
 use crate::{entity::category, param, state::AppState, view, AppError, Result};
 
 pub async fn index(
@@ -28,12 +31,32 @@ pub async fn index(
     };
     let paginator = selc.paginate(conn, page_size);
     let page_total = paginator.num_pages().await.map_err(AppError::from)?;
-    let categies: Vec<category::Model> =
-        paginator.fetch_page(page).await.map_err(AppError::from)?;
+    let categies: Vec<category::Model> = paginator
+        .fetch_page(page)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
     let tpl = view::CategoryTemplate {
         categies,
         params,
         page_total,
     };
     render(tpl, handler_name)
+}
+
+pub async fn find(
+    Extension(state): Extension<Arc<AppState>>,
+    Path(id): Path<i32>,
+) -> Result<String> {
+    let handler_name = "category/find";
+    let conn = get_conn(&state);
+    let cate: Option<category::Model> = category::Entity::find_by_id(id)
+        .one(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    match cate {
+        Some(cate) => Ok(format!("id: {}, 名称: {}", cate.id, cate.name)),
+        None => Err(AppError::notfound()),
+    }
 }
