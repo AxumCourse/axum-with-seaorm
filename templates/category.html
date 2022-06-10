@@ -59,4 +59,19 @@
         {% endfor %}
     </tbody>
 </table>
+<nav>
+  <ul class="pagination pagination">
+    {% for page in 0..page_total %} 
+        {% if page == params.page() %}
+    <li class="page-item active">
+        <span class="page-link">{{ page + 1}}</span>
+    </li>
+        {% else %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{page}}&keyword={{params.keyword()}}&is_del={{params.is_del()}}&sort={{params.sort()}}&page_size={{params.page_size()}}">{{ page + 1}}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
 {%endblock%}

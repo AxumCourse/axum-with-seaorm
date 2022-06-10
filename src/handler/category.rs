@@ -27,8 +27,13 @@ pub async fn index(
         selc = selc.order_by(category::Column::Id, ord);
     };
     let paginator = selc.paginate(conn, page_size);
+    let page_total = paginator.num_pages().await.map_err(AppError::from)?;
     let categies: Vec<category::Model> =
         paginator.fetch_page(page).await.map_err(AppError::from)?;
-    let tpl = view::CategoryTemplate { categies, params };
+    let tpl = view::CategoryTemplate {
+        categies,
+        params,
+        page_total,
+    };
     render(tpl, handler_name)
 }

@@ -11,4 +11,5 @@ pub struct IndexTemplate {}
 pub struct CategoryTemplate {
     pub params: param::CategoryParams,
     pub categies: Vec<entity::category::Model>,
+    pub page_total: usize,
 }
