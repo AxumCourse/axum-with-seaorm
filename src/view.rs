@@ -16,3 +16,9 @@ pub struct CategoryTemplate {
 #[derive(Template)]
 #[template(path = "category-add.html")]
 pub struct CategoryAddTemplate {}
+
+#[derive(Template)]
+#[template(path = "category-edit.html")]
+pub struct CategoryEditTemplate {
+    pub category: entity::category::Model,
+}

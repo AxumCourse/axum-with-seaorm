@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block title %}修改分类{%endblock%} {% block bc %}
+<li class="breadcrumb-item"><a href="/category">分类管理</a></li>
+{% endblock %} {% block content %}
+<form action="/category/edit/{{category.id}}" method="post">
+  <div class="mb-3">
+    <label for="name" class="form-label">分类名称</label>
+    <input
+      type="text"
+      name="name"
+      class="form-control"
+      id="name"
+      placeholder="输入分类名称"
+      value="{{category.name}}"
+      required
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">提交</button>
+</form>
+{%endblock%}
