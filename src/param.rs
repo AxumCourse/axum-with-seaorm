@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 const DEFAULT_PAGESIZE: usize = 15;
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct CategoryParams {
     pub keyword: Option<String>,
     pub is_del: Option<i32>,
@@ -14,8 +14,27 @@ impl CategoryParams {
     pub fn keyword(&self) -> String {
         self.keyword.clone().unwrap_or("".to_string())
     }
+    pub fn is_del_opt(&self) -> Option<bool> {
+        match self.is_del {
+            Some(n) => match n {
+                0 => Some(false),
+                1 => Some(true),
+                _ => None,
+            },
+            _ => None,
+        }
+    }
     pub fn is_del(&self) -> i32 {
-        self.is_del.unwrap_or(-1)
+        match self.is_del_opt() {
+            Some(b) => {
+                if b {
+                    1
+                } else {
+                    0
+                }
+            }
+            _ => -1,
+        }
     }
     pub fn sort(&self) -> String {
         self.sort.clone().unwrap_or("".to_string())
