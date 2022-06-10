@@ -6,32 +6,32 @@
     <label class="visually-hidden" for="keyword">关键字</label>
     <div class="input-group">
       <div class="input-group-text">关键字</div>
-      <input type="text" class="form-control" id="keyword" name="keyword" placeholder="输入关键字">
+      <input type="text" class="form-control" id="keyword" name="keyword" placeholder="输入关键字" value="{{ params.keyword() }}">
     </div>
   </div>
   <div class="col-auto">
     <label class="visually-hidden" for="is_del">是否删除</label>
     <select class="form-select" id="is_del" name="is_del">
-      <option value="-1" selected>全部</option>
-      <option value="0">未删除</option>
-      <option value="1">已删除</option>
+        <option value="-1"{% if params.is_del() == -1%} selected{%endif%}>全部</option>
+      <option value="0"{% if params.is_del() == 0%} selected{%endif%}>未删除</option>
+      <option value="1"{% if params.is_del() == 1%} selected{%endif%}>已删除</option>
     </select>
   </div>
   <div class="col-auto">
     <label class="visually-hidden" for="sort">排序</label>
     <select class="form-select" id="sort" name="sort">
-      <option value="" selected>默认排序</option>
-      <option value="asc">升序</option>
-      <option value="desc">降序</option>
+        <option value=""{% if params.sort().is_empty() %} selected{%endif%}>默认排序</option>
+      <option value="asc"{% if params.sort() == "asc" %} selected{%endif%}>升序</option>
+      <option value="desc"{% if params.sort() == "desc" %} selected{%endif%}>降序</option>
     </select>
   </div>
   <div class="col-auto">
     <label class="visually-hidden" for="page_size">每页条数</label>
     <select class="form-select" id="page_size" name="page_size">
-      <option value="0" selected>默认条数</option>
-      <option value="3">每页3条</option>
-      <option value="5">每页5条</option>
-      <option value="10">每页10条</option>
+        <option value="0"{% if params.page_size() == 0 %} selected{%endif%}>默认条数</option>
+        <option value="3"{%if params.page_size() == 3 %} selected{%endif%}>每页3条</option>
+      <option value="5"{%if params.page_size() == 5 %} selected{%endif%}>每页5条</option>
+      <option value="10"{%if params.page_size() == 10 %} selected{%endif%}>每页10条</option>
     </select>
   </div>
   <div class="col-auto">
