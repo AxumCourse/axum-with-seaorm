@@ -14,6 +14,18 @@ impl CategoryParams {
     pub fn keyword(&self) -> String {
         self.keyword.clone().unwrap_or("".to_string())
     }
+    pub fn keyword_opt(&self) -> Option<String> {
+        match &self.keyword {
+            Some(s) => {
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(s.to_string())
+                }
+            }
+            _ => None,
+        }
+    }
     pub fn is_del_opt(&self) -> Option<bool> {
         match self.is_del {
             Some(n) => match n {
@@ -38,6 +50,13 @@ impl CategoryParams {
     }
     pub fn sort(&self) -> String {
         self.sort.clone().unwrap_or("".to_string())
+    }
+    pub fn order(&self) -> Option<sea_orm::Order> {
+        match self.sort().as_str() {
+            "asc" => Some(sea_orm::Order::Asc),
+            "desc" => Some(sea_orm::Order::Desc),
+            _ => None,
+        }
     }
     pub fn page_size(&self) -> usize {
         let ps = self.page_size.unwrap_or(0);
