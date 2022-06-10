@@ -8,7 +8,7 @@ use sea_orm::Database;
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "axum_with_seaorm=debug");
+        std::env::set_var("RUST_LOG", "axum_with_seaorm=debug,sea_orm=debug");
     }
     tracing_subscriber::fmt::init();
 

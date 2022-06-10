@@ -1,12 +1,13 @@
 use serde::Deserialize;
 
+const DEFAULT_PAGESIZE: usize = 15;
 #[derive(Debug, Deserialize)]
 pub struct CategoryParams {
     pub keyword: Option<String>,
     pub is_del: Option<i32>,
     pub sort: Option<String>,
-    pub page_size: Option<i32>,
-    pub page: Option<i32>,
+    pub page_size: Option<usize>,
+    pub page: Option<usize>,
 }
 
 impl CategoryParams {
@@ -19,10 +20,14 @@ impl CategoryParams {
     pub fn sort(&self) -> String {
         self.sort.clone().unwrap_or("".to_string())
     }
-    pub fn page_size(&self) -> i32 {
-        self.page_size.unwrap_or(15)
+    pub fn page_size(&self) -> usize {
+        let ps = self.page_size.unwrap_or(0);
+        if ps <= 0 {
+            return DEFAULT_PAGESIZE;
+        }
+        ps
     }
-    pub fn page(&self) -> i32 {
+    pub fn page(&self) -> usize {
         self.page.unwrap_or(0)
     }
 }
