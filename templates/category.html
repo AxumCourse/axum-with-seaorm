@@ -58,7 +58,15 @@
             <td>{{ category.name }}</td>
             <td>
                 <a href="/category/edit/{{ category.id }}" class="btn btn-primary btn-sm">修改</a>
-                <a href="/category/del/{{ category.id }}" class="btn btn-danger btn-sm" onclick="return confirm('确定删除“{{ category.name }}”？')">删除</a>
+                <div class="btn-group">
+  <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    删除
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/category/del/{{category.id}}" onclick="return confirm('确定删除【{{category.name}}】？')">逻辑删除</a></li>
+    <li><a class="dropdown-item" href="/category/del/{{category.id}}/true"  onclick="return confirm('确定删除【{{category.name}}】？')">物理删除</a></li>
+    </ul>
+</div>
             </td>
         </tr>
         {% endfor %}

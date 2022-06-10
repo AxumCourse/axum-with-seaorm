@@ -6,7 +6,7 @@ use axum::{
 };
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
-    QueryResult, Set, Unchanged,
+    Set, Unchanged,
 };
 
 use super::{get_conn, log_error, redirect, render, HtmlRespon, RedirectRespon};
@@ -119,4 +119,31 @@ pub async fn edit(
         .map_err(AppError::from)
         .map_err(log_error(handler_name))?;
     redirect("/category?msg=分类修改成功")
+}
+pub async fn del(
+    Extension(state): Extension<Arc<AppState>>,
+    Path(params): Path<param::DelParams>,
+) -> Result<RedirectRespon> {
+    let handler_name = "category/del";
+    let conn = get_conn(&state);
+    let real = params.real.unwrap_or(false);
+    let id = params.id;
+    if real {
+        category::Entity::delete_by_id(id)
+            .exec(conn)
+            .await
+            .map_err(AppError::from)
+            .map_err(log_error(handler_name))?;
+    } else {
+        category::ActiveModel {
+            id: Unchanged(id),
+            is_del: Set(true),
+            ..Default::default()
+        }
+        .save(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    }
+    redirect("/category?msg=分类删除成功")
 }

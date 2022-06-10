@@ -83,3 +83,8 @@ impl Default for CategoryParams {
         }
     }
 }
+#[derive(Deserialize, Debug)]
+pub struct DelParams {
+    pub id: i32,
+    pub real: Option<bool>,
+}

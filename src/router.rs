@@ -14,4 +14,6 @@ pub fn init() -> axum::Router {
             "/category/edit/:id",
             get(handler::category::edit_ui).post(handler::category::edit),
         )
+        .route("/category/del/:id", get(handler::category::del))
+        .route("/category/del/:id/:real", get(handler::category::del))
 }
