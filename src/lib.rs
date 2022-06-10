@@ -2,6 +2,7 @@ pub mod config;
 pub mod entity;
 mod err;
 pub mod handler;
+pub mod param;
 pub mod router;
 pub mod state;
 pub mod view;
