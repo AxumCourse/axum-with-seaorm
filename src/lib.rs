@@ -1,6 +1,7 @@
 pub mod config;
 pub mod entity;
 mod err;
+pub mod form;
 pub mod handler;
 pub mod param;
 pub mod router;

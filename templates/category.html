@@ -1,6 +1,11 @@
 {% extends "base.html" %} {% block title %}分类列表{%endblock%} {% block bc %}
 <li class="breadcrumb-item"><a href="/category">分类管理</a></li>
 {% endblock %} {% block content %} 
+{%if params.msg.is_some() %}
+<div class="alert alert-info" role="alert">
+    {{ params.msg.clone().unwrap() }}
+</div>
+{% endif %}
 <form class="row" method="get" action="/category">
     <div class="col-auto">
     <label class="visually-hidden" for="keyword">关键字</label>

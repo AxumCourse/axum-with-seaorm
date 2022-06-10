@@ -1,13 +1,16 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Path, Query},
+    extract::{Form, Path, Query},
     Extension,
 };
-use sea_orm::{ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
+    Set,
+};
 
-use super::{get_conn, log_error, render, HtmlRespon};
-use crate::{entity::category, param, state::AppState, view, AppError, Result};
+use super::{get_conn, log_error, redirect, render, HtmlRespon, RedirectRespon};
+use crate::{entity::category, form, param, state::AppState, view, AppError, Result};
 
 pub async fn index(
     Extension(state): Extension<Arc<AppState>>,
@@ -59,4 +62,28 @@ pub async fn find(
         Some(cate) => Ok(format!("id: {}, 名称: {}", cate.id, cate.name)),
         None => Err(AppError::notfound()),
     }
+}
+
+pub async fn add_ui() -> Result<HtmlRespon> {
+    let handler_name = "category/add_ui";
+    let tpl = view::CategoryAddTemplate {};
+    render(tpl, handler_name)
+}
+pub async fn add(
+    Extension(state): Extension<Arc<AppState>>,
+    Form(frm): Form<form::CategoryForm>,
+) -> Result<RedirectRespon> {
+    let handler_name = "category/add";
+    let conn = get_conn(&state);
+    let am = category::ActiveModel {
+        name: Set(frm.name),
+        ..Default::default()
+    };
+    let added_category: category::Model = am
+        .insert(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    let url = format!("/category?msg=分类添加成功，ID是：{}", added_category.id);
+    redirect(url.as_str())
 }

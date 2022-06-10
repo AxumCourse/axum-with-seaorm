@@ -8,6 +8,7 @@ pub struct CategoryParams {
     pub sort: Option<String>,
     pub page_size: Option<usize>,
     pub page: Option<usize>,
+    pub msg: Option<String>,
 }
 
 impl CategoryParams {
@@ -78,6 +79,7 @@ impl Default for CategoryParams {
             sort: None,
             page_size: None,
             page: None,
+            msg: None,
         }
     }
 }

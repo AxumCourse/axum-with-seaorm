@@ -13,3 +13,6 @@ pub struct CategoryTemplate {
     pub categies: Vec<entity::category::Model>,
     pub page_total: usize,
 }
+#[derive(Template)]
+#[template(path = "category-add.html")]
+pub struct CategoryAddTemplate {}

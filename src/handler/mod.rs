@@ -1,5 +1,8 @@
 use askama::Template;
-use axum::response::Html;
+use axum::{
+    http::{header, HeaderMap, StatusCode},
+    response::Html,
+};
 use sea_orm::DatabaseConnection;
 
 use crate::{state::AppState, AppError, Result};
@@ -11,6 +14,7 @@ pub mod category;
 pub use index::index;
 
 type HtmlRespon = Html<String>;
+type RedirectRespon = (StatusCode, HeaderMap, ());
 
 /// 渲染模板
 fn render<T: Template>(tpl: T, handler_name: &str) -> Result<HtmlRespon> {
@@ -32,4 +36,10 @@ fn log_error(handler_name: &str) -> Box<dyn Fn(AppError) -> AppError> {
 
 fn get_conn<'a>(state: &'a AppState) -> &'a DatabaseConnection {
     &state.conn
+}
+
+fn redirect(url: &str) -> Result<RedirectRespon> {
+    let mut header = HeaderMap::new();
+    header.insert(header::LOCATION, url.parse().unwrap());
+    Ok((StatusCode::FOUND, header, ()))
 }
