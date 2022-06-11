@@ -10,7 +10,7 @@ use sea_orm::{
 use std::sync::Arc;
 
 use crate::{
-    entity::{article, category},
+    entity::{article, category, tag},
     form,
     handler::render,
     param,
@@ -86,4 +86,31 @@ pub async fn add(
     .map_err(AppError::from)
     .map_err(log_error(handler_name))?;
     redirect("/article?msg=文章添加成功")
+}
+pub async fn list_with_tags(Extension(state): Extension<Arc<AppState>>) -> Result<()> {
+    let handler_name = "article/list_with_tags";
+    let conn = get_conn(&state);
+    let list: Vec<(article::Model, Vec<tag::Model>)> = article::Entity::find()
+        .find_with_related(tag::Entity)
+        .all(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    for item in list {
+        let (article, tags) = item;
+        let tags = tags
+            .iter()
+            .map(|tag| format!("【#{} - {}】", &tag.id, &tag.name))
+            .collect::<Vec<String>>()
+            .join(", ")
+            .to_string();
+
+        tracing::debug!(
+            "文章ID: {}, 文章标题: {}, 标签： {}",
+            &article.id,
+            &article.title,
+            tags,
+        )
+    }
+    Ok(())
 }

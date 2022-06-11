@@ -49,3 +49,24 @@ INSERT INTO articles (category_id, title,content) VALUES
 (1, '标题-svNJmWaqRo', '内容-svNJmWaqRo'),
 (3, '标题-8XWiTUSfhB', '内容-8XWiTUSfhB'),
 (2, '标题-yvwE32TLkg', '内容-yvwE32TLkg');
+
+CREATE TABLE tags ( -- 标签
+	id SERIAL PRIMARY KEY, -- 自增主键
+	name VARCHAR(20) NOT NULL UNIQUE -- 标签名称
+);
+INSERT INTO tags (name) VALUES 
+('标签1'),
+('标签2'),
+('标签3');
+
+CREATE TABLE article_tags ( -- 文章标签
+	id SERIAL PRIMARY KEY, -- 自增主键
+	article_id INT NOT NULL REFERENCES articles(id),
+	tag_id INT NOT NULL REFERENCES articles(id)
+);
+INSERT INTO article_tags(article_id,tag_id) VALUES 
+(1, 1),
+(2, 1),
+(2, 2),
+(3, 1),
+(1, 3);

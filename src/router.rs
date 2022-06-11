@@ -22,4 +22,5 @@ pub fn init() -> axum::Router {
             "/article/add",
             get(handler::article::add_ui).post(handler::article::add),
         )
+        .route("/article/tags", get(handler::article::list_with_tags))
 }

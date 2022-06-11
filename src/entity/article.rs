@@ -35,4 +35,13 @@ impl Related<super::category::Entity> for Entity {
     }
 }
 
+impl Related<super::tag::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::article_tag::Relation::Tag.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::article_tag::Relation::Article.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}
