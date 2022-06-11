@@ -1,16 +1,24 @@
-use axum::{extract::Query, Extension};
-use sea_orm::{ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QuerySelect};
+use axum::{
+    extract::{Form, Query},
+    Extension,
+};
+use sea_orm::{
+    ActiveModelTrait,
+    ActiveValue::{NotSet, Set},
+    ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect,
+};
 use std::sync::Arc;
 
 use crate::{
     entity::{article, category},
+    form,
     handler::render,
     param,
     state::AppState,
     view, AppError, Result,
 };
 
-use super::{get_conn, log_error, HtmlRespon};
+use super::{get_conn, log_error, redirect, HtmlRespon, RedirectRespon};
 pub async fn index(
     Extension(state): Extension<Arc<AppState>>,
     Query(params): Query<param::ArticleParams>,
@@ -31,6 +39,7 @@ pub async fn index(
     let offset = page_size * page;
     let list = selc
         .find_also_related(category::Entity)
+        .order_by_desc(article::Column::Id)
         .limit(page_size as u64)
         .offset(offset as u64)
         .all(conn)
@@ -44,4 +53,37 @@ pub async fn index(
         params,
     };
     render(tpl, handler_name)
+}
+pub async fn add_ui(Extension(state): Extension<Arc<AppState>>) -> Result<HtmlRespon> {
+    let handler_name = "article/add_ui";
+    let conn = get_conn(&state);
+    let categies = category::Entity::find()
+        .filter(category::Column::IsDel.eq(false))
+        .limit(100)
+        .order_by_asc(category::Column::Id)
+        .all(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    let tpl = view::ArticleAddTemplate { categies };
+    render(tpl, handler_name)
+}
+pub async fn add(
+    Extension(state): Extension<Arc<AppState>>,
+    Form(frm): Form<form::ArticleForm>,
+) -> Result<RedirectRespon> {
+    let handler_name = "article/add";
+    let conn = get_conn(&state);
+    article::ActiveModel {
+        id: NotSet,
+        title: Set(frm.title),
+        category_id: Set(frm.category_id),
+        content: Set(frm.content),
+        ..Default::default()
+    }
+    .save(conn)
+    .await
+    .map_err(AppError::from)
+    .map_err(log_error(handler_name))?;
+    redirect("/article?msg=文章添加成功")
 }

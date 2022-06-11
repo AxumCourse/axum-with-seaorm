@@ -37,3 +37,8 @@ pub struct ArticlesTemplate {
     pub list: Vec<(entity::article::Model, Option<entity::category::Model>)>,
     pub params: param::ArticleParams,
 }
+#[derive(Template)]
+#[template(path = "article-add.html")]
+pub struct ArticleAddTemplate {
+    pub categies: Vec<entity::category::Model>,
+}

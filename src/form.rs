@@ -2,6 +2,11 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct CategoryForm {
-    pub id: Option<i32>,
     pub name: String,
+}
+#[derive(Deserialize)]
+pub struct ArticleForm {
+    pub title: String,
+    pub category_id: i32,
+    pub content: String,
 }

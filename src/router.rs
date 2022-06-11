@@ -18,4 +18,8 @@ pub fn init() -> axum::Router {
         .route("/category/del/:id/:real", get(handler::category::del))
         .route("/category/articles/:id", get(handler::category::articles))
         .route("/article", get(handler::article::index))
+        .route(
+            "/article/add",
+            get(handler::article::add_ui).post(handler::article::add),
+        )
 }
