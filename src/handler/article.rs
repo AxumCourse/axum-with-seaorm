@@ -87,7 +87,7 @@ pub async fn add(
     .map_err(log_error(handler_name))?;
     redirect("/article?msg=文章添加成功")
 }
-pub async fn list_with_tags(Extension(state): Extension<Arc<AppState>>) -> Result<()> {
+pub async fn list_with_tags(Extension(state): Extension<Arc<AppState>>) -> Result<String> {
     let handler_name = "article/list_with_tags";
     let conn = get_conn(&state);
     let list: Vec<(article::Model, Vec<tag::Model>)> = article::Entity::find()
@@ -96,6 +96,7 @@ pub async fn list_with_tags(Extension(state): Extension<Arc<AppState>>) -> Resul
         .await
         .map_err(AppError::from)
         .map_err(log_error(handler_name))?;
+    let mut ss = vec![];
     for item in list {
         let (article, tags) = item;
         let tags = tags
@@ -105,12 +106,11 @@ pub async fn list_with_tags(Extension(state): Extension<Arc<AppState>>) -> Resul
             .join(", ")
             .to_string();
 
-        tracing::debug!(
+        let s = format!(
             "文章ID: {}, 文章标题: {}, 标签： {}",
-            &article.id,
-            &article.title,
-            tags,
-        )
+            &article.id, &article.title, tags,
+        );
+        ss.push(s);
     }
-    Ok(())
+    Ok(ss.join("\n").to_string())
 }
