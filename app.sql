@@ -62,7 +62,7 @@ INSERT INTO tags (name) VALUES
 CREATE TABLE article_tags ( -- 文章标签
 	id SERIAL PRIMARY KEY, -- 自增主键
 	article_id INT NOT NULL REFERENCES articles(id),
-	tag_id INT NOT NULL REFERENCES articles(id)
+	tag_id INT NOT NULL REFERENCES tags(id)
 );
 INSERT INTO article_tags(article_id,tag_id) VALUES 
 (1, 1),
