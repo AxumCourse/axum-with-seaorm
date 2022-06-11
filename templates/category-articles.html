@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block title %}
+分类文章{%endblock%} {% block bc %}
+<li class="breadcrumb-item"><a href="/category">分类管理</a></li>
+{%endblock%}
+{%block content%}
+<h2>{{category.name}}的所有文章</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>文章ID</th>
+      <th>文章标题</th>
+      <th>时间</th>
+    </tr>
+  </thead>
+  <tbody>
+      {%for article in  articles%}
+    <tr>
+        <td>{{ article.id }}</td>
+        <td>{{article.title}}</td>
+        <td>{{article.dateline}}</td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+{% if page_total > 1 %}
+<nav>
+  <ul class="pagination pagination">
+    {% for page in 0..page_total %} 
+        {% if page == params.page() %}
+    <li class="page-item active">
+        <span class="page-link">{{ page + 1}}</span>
+    </li>
+        {% else %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{page}}">{{ page + 1}}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+{%endblock%}

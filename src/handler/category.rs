@@ -5,12 +5,17 @@ use axum::{
     Extension,
 };
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, Condition, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
-    Set, Unchanged,
+    ActiveModelTrait, ColumnTrait, Condition, EntityTrait, ModelTrait, PaginatorTrait, QueryFilter,
+    QueryOrder, Set, Unchanged,
 };
 
 use super::{get_conn, log_error, redirect, render, HtmlRespon, RedirectRespon};
-use crate::{entity::category, form, param, state::AppState, view, AppError, Result};
+use crate::{
+    entity::{article, category},
+    form, param,
+    state::AppState,
+    view, AppError, Result,
+};
 
 pub async fn index(
     Extension(state): Extension<Arc<AppState>>,
@@ -146,4 +151,38 @@ pub async fn del(
         .map_err(log_error(handler_name))?;
     }
     redirect("/category?msg=分类删除成功")
+}
+pub async fn articles(
+    Extension(state): Extension<Arc<AppState>>,
+    Path(id): Path<i32>,
+    Query(params): Query<param::CategoryParams>,
+) -> Result<HtmlRespon> {
+    let handler_name = "category/articles";
+    let conn = get_conn(&state);
+    let cate = category::Entity::find_by_id(id)
+        .one(conn)
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?
+        .ok_or(AppError::notfound())
+        .map_err(log_error(handler_name))?;
+
+    let paginator = cate.find_related(article::Entity).paginate(conn, 15);
+    let articles: Vec<article::Model> = paginator
+        .fetch_page(params.page())
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    let page_total = paginator
+        .num_pages()
+        .await
+        .map_err(AppError::from)
+        .map_err(log_error(handler_name))?;
+    let tpl = view::CategoryArticlesTemplate {
+        params,
+        page_total,
+        category: cate,
+        articles,
+    };
+    render(tpl, handler_name)
 }

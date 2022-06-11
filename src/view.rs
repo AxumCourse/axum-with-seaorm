@@ -22,3 +22,11 @@ pub struct CategoryAddTemplate {}
 pub struct CategoryEditTemplate {
     pub category: entity::category::Model,
 }
+#[derive(Template)]
+#[template(path = "category-articles.html")]
+pub struct CategoryArticlesTemplate {
+    pub params: param::CategoryParams,
+    pub page_total: usize,
+    pub category: entity::category::Model,
+    pub articles: Vec<entity::article::Model>,
+}
