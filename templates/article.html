@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}文章列表{%endblock%} {% block bc %}
+<li class="breadcrumb-item"><a href="/article">文章管理</a></li>
+{% endblock %} {% block content %} {%if params.msg.is_some() %}
+<div class="alert alert-info" role="alert">
+  {{ params.msg.clone().unwrap() }}
+</div>
+{% endif %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>标题</th>
+      <th>分类</th>
+      <th>时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in list %} {% let (article, category) = item %}
+    <tr>
+      <td>{{ article.id }}</td>
+      <td>{{ article.title }}</td>
+      <td>
+        {% match category%} {% when Some with(category)%} {{ category.name }} {%
+        when None %} 没有分类 {% endmatch %}
+      </td>
+      <td>{{ article.dateline }}</td>
+      <td>作业</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<nav>
+  <ul class="pagination pagination">
+    {% for page in 0..page_total %} {% if page == params.page() %}
+    <li class="page-item active">
+      <span class="page-link">{{ page + 1}}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{page}}">{{ page + 1}}</a>
+    </li>
+    {% endif %} {% endfor %}
+  </ul>
+</nav>
+{%endblock%}

@@ -88,3 +88,5 @@ pub struct DelParams {
     pub id: i32,
     pub real: Option<bool>,
 }
+
+pub type ArticleParams = CategoryParams;

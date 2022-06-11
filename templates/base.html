@@ -153,6 +153,18 @@
             }
             return;
           }
+          if (path.indexOf("/article") >= 0) {
+            $("#navbar-article").addClass("active");
+            if (path === "/article") {
+              $("#navbar-article-list").addClass("active");
+              return;
+            }
+            if (path.indexOf("/add") >= 0) {
+              $("#navbar-article-add").addClass("active");
+              return;
+            }
+            return;
+          }
         }
       });
     </script>
