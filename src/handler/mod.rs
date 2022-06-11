@@ -10,6 +10,7 @@ use crate::{state::AppState, AppError, Result};
 mod index;
 
 pub mod category;
+pub mod article;
 
 pub use index::index;
 

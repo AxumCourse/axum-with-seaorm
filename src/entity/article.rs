@@ -2,30 +2,36 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
-#[sea_orm(table_name = "categoies")]
+#[sea_orm(table_name = "articles")]
 pub struct Model {
     #[sea_orm(primary_key)]
     #[serde(skip_deserializing)]
     pub id: i32,
-    pub name: String,
+    pub category_id: i32,
+    pub title: String,
+    pub content: String,
+    pub dateline: chrono::DateTime<chrono::Local>,
     pub is_del: bool,
 }
 
 #[derive(Debug, Clone, Copy, EnumIter)]
 pub enum Relation {
-    Articles,
+    Category,
 }
 
 impl RelationTrait for Relation {
     fn def(&self) -> sea_orm::RelationDef {
         match self {
-            Self::Articles => Entity::has_many(super::article::Entity).into(),
+            Self::Category => Entity::belongs_to(super::category::Entity)
+                .from(Column::CategoryId)
+                .to(super::category::Column::Id)
+                .into(),
         }
     }
 }
-impl Related<super::article::Entity> for Entity {
+impl Related<super::category::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Articles.def()
+        Relation::Category.def()
     }
 }
 

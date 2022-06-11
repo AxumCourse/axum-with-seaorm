@@ -40,3 +40,12 @@ INSERT INTO categoies (name) VALUES
 ('zgmXGcYsGt'),
 ('WH2EBpojIS'),
 ('m1rsNTknqS');
+
+-- 插入文章的示例数据
+INSERT INTO articles (category_id, title,content) VALUES
+(1, '标题-GLKUSroPOR', '内容-GLKUSroPOR'),
+(1, '标题-hFQRulHJAk', '内容-hFQRulHJAk'),
+(2, '标题-pM0TURxhwC', '内容-pM0TURxhwC'),
+(1, '标题-svNJmWaqRo', '内容-svNJmWaqRo'),
+(3, '标题-8XWiTUSfhB', '内容-8XWiTUSfhB'),
+(2, '标题-yvwE32TLkg', '内容-yvwE32TLkg');

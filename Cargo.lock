@@ -186,6 +186,7 @@ version = "0.1.0"
 dependencies = [
  "askama",
  "axum",
+ "chrono",
  "config",
  "dotenv",
  "sea-orm",
